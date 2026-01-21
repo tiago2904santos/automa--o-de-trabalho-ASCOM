@@ -1,0 +1,57 @@
+{% extends "viagens/base.html" %}
+{% block title %}Editar Veículo{% endblock %}
+
+{% block content %}
+
+<div class="page-grid">
+
+    <!-- CARD EDITAR -->
+    <div class="form-card">
+        <h2>Editar Veículo</h2>
+        <p class="dashboard-subtitle">
+            Atualize os dados do veículo cadastrado.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small class="error">{{ field.errors|striptags }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button class="btn-primary">
+                Salvar alterações
+            </button>
+        </form>
+    </div>
+
+    <!-- CARD EXCLUIR -->
+    <div class="delete-card">
+        <h3>Zona de risco</h3>
+        <p>
+            Excluir este Veiculo removerá permanentemente
+            todas as informações associadas.
+        </p>
+
+        <form method="post" action="{% url 'excluir_veiculo' veiculo.id %}" onsubmit="return confirmarExclusao();">
+            {% csrf_token %}
+            <button type="submit" class="btn-danger">
+                Excluir Veículo
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+function confirmarExclusao() {
+    return confirm("Tem certeza que deseja excluir este Veículo?");
+}
+</script>
+
+{% endblock %}

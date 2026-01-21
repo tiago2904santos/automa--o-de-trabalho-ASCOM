@@ -17,16 +17,19 @@
                 </tr>
             </thead>
             <tbody>
-                {% for veiculo in veiculos %}
-                    <tr>
-                        <td>{{ veiculo.placa }}</td>
-                        <td>{{ veiculo.modelo }}</td>
-                        <td>{{ veiculo.get_combustivel_display }}</td>
-                        <td>
-                            <a href="#" class="btn-link">Editar</a>
-                        </td>
-                    </tr>
-                {% endfor %}
+            {% for veiculo in veiculos %}
+            <tr>
+                <td>{{ veiculo.placa }}</td>
+                <td>{{ veiculo.modelo }}</td>
+                <td>{{ veiculo.get_combustivel_display }}</td>
+                <td class="actions">
+                    <a href="{% url 'editar_veiculo' veiculo.id %}" class="btn-edit">
+                        ✏️ Editar
+                    </a>
+
+                </td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
     {% else %}

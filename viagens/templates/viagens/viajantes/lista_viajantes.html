@@ -25,8 +25,11 @@
                 <td>{{ viajante.cpf }}</td>
                 <td>{{ viajante.cargo }}</td>
                 <td>{{ viajante.telefone }}</td>
-                <td>
-                    <a href="#" class="btn-link">Editar</a>
+                <td class="actions">
+                    <a href="{% url 'editar_viajante' viajante.id %}" class="btn-edit">
+                        ✏️ Editar
+                    </a>
+
                 </td>
             </tr>
             {% empty %}

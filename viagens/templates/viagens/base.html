@@ -23,7 +23,7 @@
     <aside class="sidebar">
         <ul>
             <li>
-                <a href="#">
+                <a href="{% url 'dashboard'%}">
                     <i data-lucide="home"></i>
                     Dashboard
                 </a>
@@ -59,13 +59,13 @@
                 </a>
                 <ul class="submenu">
                     <li>
-                        <a href="#">
+                        <a href="{% url 'cadastro_viajante'%}">
                             <i data-lucide="user-plus"></i>
                             Cadastrar Servidor
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'lista_viajantes'%}">
                             <i data-lucide="list"></i>
                             Lista de Servidores
                         </a>
@@ -82,7 +82,7 @@
                 <ul class="submenu">
                     <li>
                         <li>
-                            <a href="#">
+                            <a href="{% url 'cadastro_veiculo'%}">
                                 <i data-lucide="car"></i>
                                 <span>Viaturas</span>
                                 <i data-lucide="plus"></i>
@@ -91,7 +91,7 @@
 
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'lista_veiculos'%}">
                             <i data-lucide="list"></i>
                             Lista de Viaturas
                         </a>

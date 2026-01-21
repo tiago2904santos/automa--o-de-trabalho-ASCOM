@@ -563,3 +563,68 @@ body {
 .footer-divider {
     opacity: 0.35;
 }
+
+
+
+/* editar veiculo */
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 5px;
+    border-radius: 7px;
+    background-color: #eef0ff;
+    color: #2b2bb2;
+    font-weight: 600;
+    font-size: 12px;
+    text-decoration: none;
+    border: 1px solid #dfe3ff;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    background-color: #2b2bb2;
+    color: #fff;
+}
+
+
+/* ============================
+   CARD DE EXCLUSÃO (PERIGO)
+============================ */
+
+.delete-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    border: 1px solid #f1cfcf;
+    border-left: 6px solid #d32f2f;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.delete-card h3 {
+    color: #d32f2f;
+    margin-bottom: 10px;
+}
+
+.delete-card p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Botão excluir */
+.btn-danger {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #b71c1c;
+}
