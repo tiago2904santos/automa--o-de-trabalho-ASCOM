@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <title>{% block title %}Central de Viagens{% endblock %}</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'viagens/css/style.css' %}">
 </head>
+
 <body>
 
 <header class="topbar">
@@ -18,12 +22,90 @@
 
     <aside class="sidebar">
         <ul>
-            <li><a href="#">Tela Inicial</a></li>
-            <li><a href="#">Criar Ofício</a></li>
-            <li><a href="#">Cadastro de Viajante</a></li>
-            <li><a href="#">Lista de Viajantes</a></li>
-            <li><a href="#">Cadastro de Viatura</a></li>
-            <li><a href="#">Prestação de Contas</a></li>
+            <li>
+                <a href="#">
+                    <i data-lucide="home"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">
+                    <i data-lucide="file-text"></i>
+                    Ofícios
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="#">
+                            <i data-lucide="plus-circle"></i>
+                            Criar Ofício
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i data-lucide="list"></i>
+                            Lista de Ofícios
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">
+                    <i data-lucide="users"></i>
+                    Servidores
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="#">
+                            <i data-lucide="user-plus"></i>
+                            Cadastrar Servidor
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i data-lucide="list"></i>
+                            Lista de Servidores
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">
+                    <i data-lucide="car"></i>
+                    Viaturas
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </a>
+                <ul class="submenu">
+                    <li>
+                        <li>
+                            <a href="#">
+                                <i data-lucide="car"></i>
+                                <span>Viaturas</span>
+                                <i data-lucide="plus"></i>
+                            </a>
+                        </li>
+
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i data-lucide="list"></i>
+                            Lista de Viaturas
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li>
+                <a href="#">
+                    <i data-lucide="settings"></i>
+                    Configurações
+                </a>
+            </li>
         </ul>
     </aside>
 
@@ -32,6 +114,65 @@
     </main>
 
 </div>
+
+<script>
+    lucide.createIcons();
+
+    document.querySelectorAll('.submenu-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const parent = this.parentElement;
+            const submenu = parent.querySelector('.submenu');
+
+            const isOpen = parent.classList.contains('open');
+
+            // Fecha todos os outros
+            document.querySelectorAll('.has-submenu.open').forEach(item => {
+                if (item !== parent) {
+                    closeSubmenu(item);
+                }
+            });
+
+            if (isOpen) {
+                closeSubmenu(parent);
+            } else {
+                openSubmenu(parent);
+            }
+        });
+    });
+
+    function openSubmenu(parent) {
+        const submenu = parent.querySelector('.submenu');
+        parent.classList.add('open');
+
+        submenu.style.height = submenu.scrollHeight + 'px';
+        submenu.style.opacity = '1';
+    }
+
+    function closeSubmenu(parent) {
+        const submenu = parent.querySelector('.submenu');
+
+        submenu.style.height = submenu.scrollHeight + 'px';
+
+        requestAnimationFrame(() => {
+            submenu.style.height = '0px';
+            submenu.style.opacity = '0';
+        });
+
+        parent.classList.remove('open');
+    }
+</script>
+<footer class="app-footer">
+    <div class="footer-content">
+        <span>Central de Viagens</span>
+        <span class="footer-divider">•</span>
+        <span>Desenvolvido por <strong>Tiago dos Santos</strong></span>
+        <span class="footer-divider">•</span>
+        <span>© {% now "Y" %}</span>
+    </div>
+</footer>
+
 
 </body>
 </html>

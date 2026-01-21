@@ -1,0 +1,43 @@
+{% extends 'viagens/base.html' %}
+
+{% block title %}Cadastro de Viajante{% endblock %}
+
+{% block content %}
+
+<div class="page-grid">
+
+    <div class="form-card">
+        <h2>Cadastro de Viajante</h2><br>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form.visible_fields %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small class="error">{{ field.errors|striptags }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-primary">Salvar</button>
+        </form>
+    </div>
+
+    <div class="illustration-card">
+        <div class="icon">🧳</div>
+        <h3>Cadastro de Viajantes</h3>
+        <p>
+            Preencha os dados ao lado para registrar um novo viajante
+            no sistema da Central de Viagens ASCOM.
+        </p>
+        <p class="muted">
+            Todos os campos obrigatórios devem ser informados corretamente.
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "viagens/base.html" %}
+
+{% block title %}Lista de Viajantes{% endblock %}
+
+{% block content %}
+<h2>Lista de Viajantes</h2><br>
+
+<div class="list-card">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Cargo</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for viajante in viajantes %}
+            <tr>
+                <td>{{ viajante.nome }}</td>
+                <td>{{ viajante.cpf }}</td>
+                <td>{{ viajante.cargo }}</td>
+                <td>{{ viajante.telefone }}</td>
+                <td>
+                    <a href="#" class="btn-link">Editar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Nenhum viajante cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

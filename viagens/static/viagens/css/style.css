@@ -1,36 +1,78 @@
+/* ==========================================================================
+   ÁREA DE TESTE DE FONTES (Copie e cole isso no topo do seu CSS)
+   ========================================================================== */
+
+/* 1. ROBOTO (Técnica e Padrão) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* 2. OPEN SANS (Leitura Fácil) */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+/* 3. LATO (Elegante e Institucional) */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+/* 4. INTER (Moderna para Dashboards) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+/* ==========================================================================
+   APLICANDO A FONTE
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+
+    /* --- ESCOLHA AQUI (Descomente a linha da fonte que quer testar) --- */
+
+    /* Opção 1: Roboto */
+    /* font-family: 'Roboto', sans-serif; */
+
+    /* Opção 2: Open Sans */
+    /* font-family: 'Open Sans', sans-serif; */
+
+    /* Opção 3: Lato */
+    /* font-family: 'Lato', sans-serif; */
+
+    /* Opção 4: Inter (Minha recomendação para Dashboard) */
+    font-family: 'Inter', sans-serif; 
 }
 
 body {
-    background-color: #f2f4f8;
+    background-color: #f2f4f8; /* Fundo cinza azulado suave */
+    color: #333; /* Texto padrão cinza escuro (melhor que preto puro) */
+    line-height: 1.6;
 }
 
-/* Topo */
+/* =========================================
+   TOPO (TOPBAR)
+   ================================********* */
 .topbar {
     background: linear-gradient(90deg, #2b2bb2, #3f51b5);
     color: white;
-    padding: 20px;
+    padding: 20px 30px; /* Aumentei levemente o padding lateral */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 10px 10px rgba(0,0,0,0.1); /* Sombra sutil para profundidade */
 }
 
-/* Layout */
+/* =========================================
+   LAYOUT
+   ================================********* */
 .container {
     display: flex;
     min-height: calc(100vh - 80px);
 }
 
-/* Menu lateral */
+/* =========================================
+   MENU LATERAL (SIDEBAR)
+   ================================********* */
 .sidebar {
-    width: 230px;
+    width: 300px; /* Levemente mais largo para acomodar a nova fonte */
     background-color: #ffffff;
-    border-right: 1px solid #ddd;
-    padding: 20px;
+    border-right: 1px solid #e0e0e0;
+    padding: 30px 25px;
 }
 
 .sidebar ul {
@@ -38,74 +80,486 @@ body {
 }
 
 .sidebar li {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .sidebar a {
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
+    color: #555;
+    font-weight: 600; /* Semi-bold para boa leitura */
+    font-size: 15px;
+    display: block;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
 }
 
 .sidebar a:hover {
+    background-color: #f0f2ff; /* Fundo suave ao passar o mouse */
     color: #2b2bb2;
 }
 
-/* Conteúdo */
+/* =========================================
+   CONTEÚDO PRINCIPAL
+   ================================********* */
 .content {
     flex: 1;
     padding: 40px;
 }
 
-/* Formulário */
-.form-card {
+/* =========================================
+   FORMULÁRIOS E CARDS
+   ================================********* */
+.form-card, .list-card {
     background-color: white;
-    padding: 30px;
-    max-width: 600px;
+    padding: 35px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Sombra mais difusa e moderna */
+    border: 1px solid #e1e4e8; /* Borda sutil */
+}
+
+.form-card {
+    max-width: 600px;
+}
+
+.list-card {
+    width: 100%;
+    min-height: calc(100vh - 180px);
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* Mais respiro entre campos */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444; /* Cinza escuro profissional */
+    font-size: 14px;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 6px;
     border: 1px solid #ccc;
+    font-size: 15px;
+    transition: border-color 0.3s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     border-color: #2b2bb2;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(43, 43, 178, 0.1); /* "Glow" azul ao focar */
 }
 
-/* Botão */
+/* =========================================
+   BOTÕES
+   ================================********* */
 .btn-primary {
     background-color: #2b2bb2;
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background-color 0.2s;
 }
 
 .btn-primary:hover {
-    background-color: #1f1f8a;
+    background-color: #1a1a80;
 }
 
-/* Erros */
+.btn-link {
+    color: #2b2bb2;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   TABELA (ESTILO GOV)
+   ================================********* */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    font-size: 14px; /* Tamanho padrão gov para tabelas */
+}
+
+/* Cabeçalho da Tabela */
+.table thead {
+    background-color: #eef0f5;
+    /* Linha azul na base do cabeçalho (Toque Institucional) */
+    border-bottom: 2px solid #2b2bb2; 
+}
+
+.table th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: #2c3e50;
+    text-transform: uppercase; /* Letras maiúsculas para hierarquia */
+    font-size: 12px; /* Levemente menor pois é uppercase */
+    letter-spacing: 0.5px;
+}
+
+/* Corpo da Tabela */
+.table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #eaeaea;
+    color: #555;
+}
+
+/* Efeito Hover APENAS no corpo da tabela */
+.table tbody tr:hover {
+    background-color: #f5f7ff; /* Azul muito suave */
+}
+
+/* Garante que o cabeçalho NÃO mude de cor */
+.table thead tr:hover {
+    background-color: #eef0f5 !important;
+}
+
+/* =========================================
+   UTILITÁRIOS
+   ================================********* */
 .error {
-    color: red;
-    font-size: 12px;
+    color: #d32f2f;
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* =========================================
+   LAYOUT DE PÁGINA COM CARD LATERAL
+   ================================********* */
+
+.page-grid {
+    display: grid;
+    grid-template-columns: 600px 1fr;
+    gap: 40px;
+    align-items: start;
+    width: 100%;
+}
+
+/* =========================================
+   CARD INFORMATIVO / ILUSTRAÇÃO
+   ================================********* */
+
+.illustration-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    border: 1px solid #e1e4e8;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    text-align: center;
+    min-height: 100%;
+}
+
+.illustration-card .icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+}
+
+.illustration-card h3 {
+    color: #2b2bb2;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.illustration-card p {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.illustration-card .muted {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Ícones no Sidebar */
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    color: #666;
+}
+
+/* Hover acompanha o texto */
+.sidebar a:hover svg {
+    color: #2b2bb2;
+}
+/* ==============================
+   SUBMENU SIDEBAR
+============================== */
+
+.has-submenu > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.has-submenu .chevron {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+/* Submenu escondido */
+.submenu {
+    list-style: none;
+    margin-top: 5px;
+    margin-left: 28px;
+    display: none;
+}
+
+/* Links do submenu */
+.submenu a {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 10px;
+}
+
+/* Quando aberto */
+.has-submenu.open .submenu {
+    display: block;
+}
+
+.has-submenu.open .chevron {
+    transform: rotate(180deg);
+}
+
+/* ==============================
+   SUBMENU COM ANIMAÇÃO REAL
+============================== */
+
+.submenu {
+    list-style: none;
+    margin-left: 32px;
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    transition: height 0.25s ease, opacity 0.2s ease;
+}
+
+.submenu a {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 10px;
+}
+
+.has-submenu .chevron {
+    margin-left: auto;
+    transition: transform 0.25s ease;
+}
+
+.has-submenu.open .chevron {
+    transform: rotate(180deg);
+}
+
+/* =========================================    
+   DASHBOARD
+========================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.dashboard-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #e1e4e8;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #eef0ff;
+    color: #2b2bb2;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.card-title {
+    font-size: 14px;
+    color: #666;
+}
+
+.card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2b2bb2;
+}
+
+
+/* =========================================
+   DASHBOARD - LAYOUT
+========================================= */
+
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-subtitle {
+    color: #666;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+/* Layout em duas colunas */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Cards maiores */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+/* Card */
+.dashboard-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #e1e4e8;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* Área visual */
+.dashboard-side {
+    display: flex;
+    align-items: stretch;
+}
+
+.dashboard-illustration {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #e1e4e8;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+.dashboard-illustration img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.dashboard-illustration h3 {
+    margin-bottom: 10px;
+    color: #2b2bb2;
+}
+
+.dashboard-illustration p {
+    font-size: 14px;
+    color: #555;
+}
+
+.content {
+    flex: 1;
+    padding: 40px;
+
+    background-image: url("../img/background.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    /* deixa mais sério e discreto */
+    position: relative;
+}
+.content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(235, 240, 250, 0.808);
+    z-index: 0;
+}
+
+.content > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================
+                FOOTER   
+========================================= */
+
+.app-footer {
+    width: 100%;
+    padding: 12px 24px;   /* menor */
+    margin-top: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(4px);
+
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 0.8rem;   /* menor */
+    color: #666;
+}
+
+.footer-content strong {
+    font-weight: 600;
+    color: #2b2bb2;      /* cor institucional */
+}
+
+.footer-divider {
+    opacity: 0.35;
 }

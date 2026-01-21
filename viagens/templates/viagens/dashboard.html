@@ -1,0 +1,79 @@
+{% extends 'viagens/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+    <h2>Dashboard</h2>
+    <p class="dashboard-subtitle">
+        Visão geral da Central de Viagens
+    </p>
+</div>
+
+<div class="dashboard-layout">
+
+    <!-- COLUNA PRINCIPAL (4 CARDS GRANDES) -->
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="users"></i>
+            </div>
+            <div>
+                <div class="card-title">Viajantes</div>
+                <div class="card-value">12</div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="file-text"></i>
+            </div>
+            <div>
+                <div class="card-title">Ofícios</div>
+                <div class="card-value">5</div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="car"></i>
+            </div>
+            <div>
+                <div class="card-title">Viaturas</div>
+                <div class="card-value">8</div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i data-lucide="clipboard-check"></i>
+            </div>
+            <div>
+                <div class="card-title">Prestações</div>
+                <div class="card-value">3</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- COLUNA LATERAL (SÓ O RESTANTE) -->
+    <div class="dashboard-side">
+        <div class="dashboard-illustration">
+
+            <h3>Central de Viagens</h3>
+            <p>
+                Controle institucional de viajantes, viaturas
+                e documentos oficiais da ASCOM.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+
+{% endblock %}

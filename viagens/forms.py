@@ -1,5 +1,5 @@
 from django import forms
-from .models import Viajante
+from .models import Viajante, Veiculo
 
 class ViajanteForm(forms.ModelForm):
     class Meta:
@@ -9,7 +9,7 @@ class ViajanteForm(forms.ModelForm):
         widgets = {
             "nome": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "Nome completo"
+                "placeholder": "NOME COMPLETO"
             }),
             "cpf": forms.TextInput(attrs={
                 "class": "form-control",
@@ -25,5 +25,24 @@ class ViajanteForm(forms.ModelForm):
             "telefone": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "(00) 00000-0000"
+            }),
+        }
+
+class VeiculoForm(forms.ModelForm):
+    class Meta:
+        model = Veiculo
+        fields = ["placa", "modelo", "combustivel"]
+        
+        widgets = {
+            "placa": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "AAA1234"
+            }),
+            "modelo": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Digite o modelo da viatura"
+            }),
+            "combustivel": forms.Select(attrs={
+                "class": "form-control"
             }),
         }

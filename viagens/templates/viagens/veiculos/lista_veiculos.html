@@ -1,0 +1,36 @@
+{% extends "viagens/base.html" %}
+
+{% block title %}Lista de Veículos{% endblock %}
+
+{% block content %}
+<div class="list-card">
+    <h2>Veículos Cadastrados</h2>
+
+    {% if veiculos %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Modelo</th>
+                    <th>Combustível</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for veiculo in veiculos %}
+                    <tr>
+                        <td>{{ veiculo.placa }}</td>
+                        <td>{{ veiculo.modelo }}</td>
+                        <td>{{ veiculo.get_combustivel_display }}</td>
+                        <td>
+                            <a href="#" class="btn-link">Editar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum veículo cadastrado.</p>
+    {% endif %}
+</div>
+{% endblock %}
