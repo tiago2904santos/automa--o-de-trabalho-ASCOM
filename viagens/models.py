@@ -21,10 +21,6 @@ number_validator = RegexValidator(
     message='Telefone inválido. Use o formato (DD) XXXXX-XXXX'
 )
 
-protocol_validator = RegexValidator(
-
-)
-
 
 class Viajante(models.Model):
     CARGO_CHOICES = [
@@ -32,6 +28,7 @@ class Viajante(models.Model):
         ("PAPILOSCOPISTA", "Papiloscopista"),
         ("ASSESSOR", "Assessor"),
         ("ADMINISTRATIVO", "Administrativo"), 
+        ("DELEGADO DE POLICIA", "Delegado de Policia")
     ]
 
     nome = models.CharField(max_length=255)
@@ -54,27 +51,3 @@ class Viajante(models.Model):
     def __str__(self):
         return f"{self.nome}"
     
-
-class Veiculo(models.Model):
-
-    COMBUSTIVEL_CHOICES = [
-        ('GASOLINA', 'Gasolina'),
-        ('ETANOL', 'Etanol'),
-        ('DIESEL', 'Diesel'),
-    ]
-
-    placa = models.CharField(
-        max_length=7,
-        unique=True,
-        validators=[placa_validator]
-    )
-    modelo = models.CharField(max_length=100)
-    combustivel = models.CharField(
-        max_length=10, 
-        choices=COMBUSTIVEL_CHOICES,
-        default="ETANOL")
-
-    def __str__(self):
-        return f" {self.modelo} - {self.placa}"
-    
-

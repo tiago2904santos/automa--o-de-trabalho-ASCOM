@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Central de Viagens{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'viagens/css/style.css' %}">
+</head>
+<body>
+
+<header class="topbar">
+    <h1>Central de Viagens ASCOM</h1>
+    <span class="user">Usuário: {{ request.user }}</span>
+</header>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#">Tela Inicial</a></li>
+            <li><a href="#">Criar Ofício</a></li>
+            <li><a href="#">Cadastro de Viajante</a></li>
+            <li><a href="#">Lista de Viajantes</a></li>
+            <li><a href="#">Cadastro de Viatura</a></li>
+            <li><a href="#">Prestação de Contas</a></li>
+        </ul>
+    </aside>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+</body>
+</html>

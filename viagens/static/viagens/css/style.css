@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f2f4f8;
+}
+
+/* Topo */
+.topbar {
+    background: linear-gradient(90deg, #2b2bb2, #3f51b5);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    min-height: calc(100vh - 80px);
+}
+
+/* Menu lateral */
+.sidebar {
+    width: 230px;
+    background-color: #ffffff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    margin-bottom: 15px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.sidebar a:hover {
+    color: #2b2bb2;
+}
+
+/* Conteúdo */
+.content {
+    flex: 1;
+    padding: 40px;
+}
+
+/* Formulário */
+.form-card {
+    background-color: white;
+    padding: 30px;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #2b2bb2;
+    outline: none;
+}
+
+/* Botão */
+.btn-primary {
+    background-color: #2b2bb2;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #1f1f8a;
+}
+
+/* Erros */
+.error {
+    color: red;
+    font-size: 12px;
+}
