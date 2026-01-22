@@ -1,9 +1,9 @@
 {% extends "viagens/base.html" %}
 
-{% block title %}Lista de Viajantes{% endblock %}
+{% block title %}Lista de Ofícios{% endblock %}
 
 {% block content %}
-<h2>Lista de Viajantes</h2><br>
+<h2>Lista de Ofícios</h2><br>
 
 <div class="list-card">
 
@@ -21,18 +21,18 @@
                         name="q"
                         id="searchInput"
                         value="{{ q }}"
-                        placeholder="Nome, CPF ou telefone"
+                        placeholder="Número, protocolo, destino ou servidor"
                     >
                 </div>
 
-                <!-- Cargo -->
+                <!-- Status -->
                 <div class="filter-group">
-                    <label>Cargo</label>
-                    <select name="cargo" id="cargoFilter">
+                    <label>Status</label>
+                    <select name="status" id="statusFilter">
                         <option value="">Todos</option>
-                        {% for value, label in cargo_choices %}
+                        {% for value, label in status_choices %}
                             <option value="{{ value }}"
-                                {% if cargo_selecionado == value %}selected{% endif %}
+                                {% if status_selecionado == value %}selected{% endif %}
                             >
                                 {{ label }}
                             </option>
@@ -45,7 +45,7 @@
             <!-- Ações -->
             <div class="filter-actions">
                 <button type="submit" class="btn-primary">Filtrar</button>
-                <a href="{% url 'lista_viajantes' %}" class="btn-clear">Limpar</a>
+                <a href="{% url 'lista_oficios' %}" class="btn-clear">Limpar</a>
             </div>
 
         </form>
@@ -55,58 +55,61 @@
     <table class="table" id="dataTable">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Cargo</th>
-                <th>Telefone</th>
+                <th>Oficio</th>
+                <th>Protocolo</th>
+                <th>Destino</th>
+                <th>Servidor</th>
+                <th>Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
 
         <tbody>
-            {% for viajante in viajantes %}
+            {% for oficio in oficios %}
             <tr>
-                <td>{{ viajante.nome }}</td>
-                <td>{{ viajante.cpf }}</td>
-                <td>{{ viajante.cargo }}</td>
-                <td>{{ viajante.telefone }}</td>
+                <td>{{ oficio.oficio }}</td>
+                <td>{{ oficio.protocolo }}</td>
+                <td>{{ oficio.destino }}</td>
+                <td>{{ oficio.servidor }}</td>
+                <td>{{ oficio.get_status_display }}</td>
                 <td>
-                    <a href="{% url 'editar_viajante' viajante.id %}" class="btn-edit">
+                    <a href="{% url 'editar_oficio' oficio.id %}" class="btn-edit">
                         ✏️ Editar
                     </a>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">Nenhum viajante encontrado.</td>
+                <td colspan="6">Nenhum ofício encontrado.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("searchInput");
-    const cargoFilter = document.getElementById("cargoFilter");
+    const statusFilter = document.getElementById("statusFilter");
     const rows = document.querySelectorAll("#dataTable tbody tr");
 
     function filtrarTabela() {
         const search = searchInput.value.toLowerCase();
-        const cargo = cargoFilter.value.toLowerCase();
+        const status = statusFilter.value.toLowerCase();
 
         rows.forEach(row => {
             const textoLinha = row.textContent.toLowerCase();
 
             const matchSearch = textoLinha.includes(search);
-            const matchCargo = !cargo || textoLinha.includes(cargo);
+            const matchStatus = !status || textoLinha.includes(status);
 
-            row.style.display = (matchSearch && matchCargo) ? "" : "none";
+            row.style.display = (matchSearch && matchStatus) ? "" : "none";
         });
     }
 
     searchInput.addEventListener("keyup", filtrarTabela);
-    cargoFilter.addEventListener("change", filtrarTabela);
+    statusFilter.addEventListener("change", filtrarTabela);
 });
 </script>
 

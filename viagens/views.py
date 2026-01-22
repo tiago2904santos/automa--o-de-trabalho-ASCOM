@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ViajanteForm, VeiculoForm
-from .models import Viajante, Veiculo
+from django.http import JsonResponse
+from .forms import ViajanteForm, VeiculoForm, OficioForm
+from .models import Viajante, Veiculo, Oficio
+import django.db.models as models
 
-# dashboard:
+# ================= DASHBOARD ================= #
 
 def dashboard(request):
     return render(request, "viagens/dashboard.html")
 
-# ==================================================== #
-# ==================SERVIDORES======================== #
-# ==================================================== #
 
+# ==================================================== #
+# ================= SERVIDORES ======================= #
+# ==================================================== #
 
 def cadastro_viajante(request):
     if request.method == "POST":
@@ -27,13 +29,44 @@ def cadastro_viajante(request):
 
 
 def lista_viajantes(request):
-    viajantes = Viajante.objects.all().order_by("nome")
+    viajantes = Viajante.objects.all()
+
+    q = request.GET.get("q", "")
+    cargo = request.GET.get("cargo", "")
+    order = request.GET.get("order", "nome")
+
+    # 🔍 Busca
+    if q:
+        viajantes = viajantes.filter(
+            models.Q(nome__icontains=q) |
+            models.Q(cpf__icontains=q) |
+            models.Q(rg__icontains=q) |
+            models.Q(telefone__icontains=q)
+        )
+
+    # 🎯 Filtro cargo
+    if cargo:
+        viajantes = viajantes.filter(cargo=cargo)
+
+    # ↕️ Ordenação segura
+    campos_validos = ["nome", "cpf", "cargo", "telefone"]
+    campo_order = order.lstrip("-")
+
+    if campo_order in campos_validos:
+        viajantes = viajantes.order_by(order)
+
     return render(request, "viagens/viajantes/lista_viajantes.html", {
-        "viajantes": viajantes
+        "viajantes": viajantes,
+        "cargo_choices": Viajante._meta.get_field("cargo").choices,
+        "cargo_selecionado": cargo,
+        "q": q,
+        "order": order,
     })
+
 
 def editar_viajante(request, viajante_id):
     viajante = get_object_or_404(Viajante, id=viajante_id)
+
     if request.method == "POST":
         form = ViajanteForm(request.POST, instance=viajante)
         if form.is_valid():
@@ -41,11 +74,13 @@ def editar_viajante(request, viajante_id):
             return redirect("lista_viajantes")
     else:
         form = ViajanteForm(instance=viajante)
+
     return render(
         request,
         "viagens/viajantes/editar_viajante.html",
         {"form": form, "viajante": viajante}
     )
+
 
 def excluir_viajante(request, viajante_id):
     viajante = get_object_or_404(Viajante, id=viajante_id)
@@ -62,9 +97,8 @@ def excluir_viajante(request, viajante_id):
 
 
 # ==================================================== #
-# ====================VEICULOS======================== #
+# =================== VEÍCULOS ======================= #
 # ==================================================== #
-
 
 def cadastro_veiculo(request):
     if request.method == "POST":
@@ -81,11 +115,39 @@ def cadastro_veiculo(request):
         {"form": form}
     )
 
+
 def lista_veiculos(request):
-    veiculos = Veiculo.objects.all().order_by("modelo")
+    veiculos = Veiculo.objects.all()
+
+    q = request.GET.get("q", "")
+    combustivel = request.GET.get("combustivel", "")
+    order = request.GET.get("order", "modelo")
+
+    # 🔍 Busca
+    if q:
+        veiculos = veiculos.filter(
+            models.Q(placa__icontains=q) |
+            models.Q(modelo__icontains=q)
+        )
+
+    # 🎯 Filtro combustível
+    if combustivel:
+        veiculos = veiculos.filter(combustivel=combustivel)
+
+    # ↕️ Ordenação segura
+    campos_validos = ["modelo", "placa", "combustivel"]
+    campo_order = order.lstrip("-")
+    if campo_order in campos_validos:
+        veiculos = veiculos.order_by(order)
+
     return render(request, "viagens/veiculos/lista_veiculos.html", {
-        "veiculos": veiculos
+        "veiculos": veiculos,
+        "combustivel_choices": Veiculo._meta.get_field("combustivel").choices,
+        "combustivel_selecionado": combustivel,
+        "q": q,
+        "order": order,
     })
+
 
 def editar_veiculo(request, veiculo_id):
     veiculo = get_object_or_404(Veiculo, id=veiculo_id)
@@ -104,6 +166,7 @@ def editar_veiculo(request, veiculo_id):
         {"form": form, "veiculo": veiculo}
     )
 
+
 def excluir_veiculo(request, veiculo_id):
     veiculo = get_object_or_404(Veiculo, id=veiculo_id)
 
@@ -116,3 +179,112 @@ def excluir_veiculo(request, veiculo_id):
         "viagens/veiculos/excluir_veiculo.html",
         {"veiculo": veiculo}
     )
+
+
+# ==================================================== #
+# ==================== OFÍCIOS ======================= #
+# ==================================================== #
+
+def cadastro_oficio(request):
+    if request.method == "POST":
+        form = OficioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("cadastro_oficio")
+    else:
+        form = OficioForm()
+
+    return render(request, "viagens/oficios/cadastro_oficio.html", {
+        "form": form
+    })
+
+
+def lista_oficios(request):
+    oficios = Oficio.objects.all().order_by("-oficio")
+
+    busca = request.GET.get("q", "")
+    status = request.GET.get("status", "")
+    order = request.GET.get("order", "-oficio")
+
+    # 🔍 Busca
+    if busca:
+        oficios = oficios.filter(
+            models.Q(oficio__icontains=busca) |
+            models.Q(protocolo__icontains=busca) |
+            models.Q(destino__icontains=busca) |
+            models.Q(servidor__nome__icontains=busca)
+        )
+
+    # 🎯 Filtro status
+    if status:
+        oficios = oficios.filter(status=status)
+
+    # ↕️ Ordenação segura
+    campos_validos = ["oficio", "protocolo", "destino", "servidor__nome"]
+    campo_order = order.lstrip("-")
+    if campo_order in campos_validos:
+        oficios = oficios.order_by(order)
+
+    return render(request, "viagens/oficios/lista_oficios.html", {
+        "oficios": oficios,
+        "status_choices": Oficio._meta.get_field("status").choices,
+        "status_selecionado": status,
+        "q": busca,
+        "order": order
+    })
+
+
+def editar_oficio(request, oficio_id):
+    oficio = get_object_or_404(Oficio, id=oficio_id)
+
+    if request.method == "POST":
+        form = OficioForm(request.POST, instance=oficio)
+        if form.is_valid():
+            form.save()
+            return redirect("lista_oficios")
+    else:
+        form = OficioForm(instance=oficio)
+
+    return render(
+        request,
+        "viagens/oficios/editar_oficio.html",
+        {"form": form, "oficio": oficio}
+    )
+
+
+def excluir_oficio(request, oficio_id):
+    oficio = get_object_or_404(Oficio, id=oficio_id)
+
+    if request.method == "POST":
+        oficio.delete()
+        return redirect("lista_oficios")
+
+    return render(
+        request,
+        "viagens/oficios/excluir_oficio.html",
+        {"oficio": oficio}
+    )
+
+
+# ==================================================== #
+# ================ AUTOCOMPLETE AJAX ================= #
+# ==================================================== #
+
+def buscar_servidores(request):
+    q = request.GET.get("q", "")
+    servidores = Viajante.objects.filter(
+        nome__icontains=q
+    ).values("id", "nome").order_by("nome")[:7]
+
+    data = list(servidores)
+    return JsonResponse(data, safe=False)
+
+
+def buscar_motoristas(request):
+    q = request.GET.get("q", "")
+    motoristas = Viajante.objects.filter(
+        nome__icontains=q
+    ).values("id", "nome").order_by("nome")[:7]
+
+    data = list(motoristas)
+    return JsonResponse(data, safe=False)

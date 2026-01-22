@@ -1,5 +1,10 @@
+from decimal import Decimal
 from django.db import models
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
+
+
+# ================validação======================== #
 
 cpf_validator = RegexValidator(
     regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$',
@@ -27,13 +32,16 @@ placa_validator = RegexValidator(
 )
 
 
+
+# =========== viajante ============ #
+
 class Viajante(models.Model):
     CARGO_CHOICES = [
-        ("AGENTE DE POLÍCIA JUDICIÁRIA", "Agente de Polícia Judiciária"),
-        ("PAPILOSCOPISTA", "Papiloscopista"),
-        ("ASSESSOR", "Assessor"),
-        ("ADMINISTRATIVO", "Administrativo"), 
-        ("DELEGADO DE POLICIA", "Delegado de Policia")
+        ("Agente de Polícia Judiciária", "Agente de Polícia Judiciária"),
+        ("Papiloscopista", "Papiloscopista"),
+        ("Assessor", "Assessor"),
+        ("Administrativo", "Administrativo"), 
+        ("Delegado de Policia", "Delegado de Policia")
     ]
 
     nome = models.CharField(max_length=255)
@@ -55,6 +63,11 @@ class Viajante(models.Model):
     def __str__(self):
         return f"{self.nome}"
     
+
+    
+# =========== veiculo ============ #
+
+    
 class Veiculo(models.Model):
     COMBUSTIVEL_CHOICES = [
         ("ETANOL", "Etanol"),
@@ -68,3 +81,41 @@ class Veiculo(models.Model):
 
     def __str__(self):
         return f"{self.placa} - {self.modelo}"
+    
+
+# ==============OFicio=======================================================
+
+
+class Oficio(models.Model):
+    # Oficio
+    oficio = models.CharField(max_length=50)
+    protocolo = models.CharField(max_length=50)
+    sede = models.CharField(max_length=100)
+    destino = models.CharField(max_length=100)
+
+    # Servidores
+    servidor = models.ForeignKey(
+        'Viajante',
+        on_delete=models.CASCADE,
+        related_name='oficios_servidor'  # <--- related_name único
+    )
+    motorista = models.ForeignKey(
+        'Viajante',
+        on_delete=models.CASCADE,
+        related_name='oficios_motorista'  # <--- related_name único
+    )
+
+    # Viagem
+    data_saida = models.DateField()
+    data_chegada = models.DateField()
+    valor_diaria = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    veiculo = models.ForeignKey('Veiculo', on_delete=models.CASCADE)
+    motivo = models.TextField()
+    status = models.CharField(max_length=20, choices=[
+        ('pendente', 'Pendente'),
+        ('aprovado', 'Aprovado'),
+        ('concluido', 'Concluído')
+    ], default='pendente')
+
+    def __str__(self):
+        return f"{self.oficio} - {self.servidor} - {self.destino}"

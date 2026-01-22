@@ -3,37 +3,110 @@
 {% block title %}Lista de Veículos{% endblock %}
 
 {% block content %}
-<div class="list-card">
-    <h2>Veículos Cadastrados</h2>
+<h2>Lista de Veículos</h2><br>
 
-    {% if veiculos %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Placa</th>
-                    <th>Modelo</th>
-                    <th>Combustível</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
+<div class="list-card">
+
+    <!-- 🔍 FILTROS -->
+    <div class="filter-bar">
+        <form method="get" class="filter-form">
+
+            <div class="filter-left">
+
+                <!-- Busca -->
+                <div class="filter-group">
+                    <label>Buscar</label>
+                    <input
+                        type="text"
+                        name="q"
+                        id="searchInput"
+                        value="{{ q }}"
+                        placeholder="Placa ou modelo"
+                    >
+                </div>
+
+                <!-- Combustível -->
+                <div class="filter-group">
+                    <label>Combustível</label>
+                    <select name="combustivel" id="combustivelFilter">
+                        <option value="">Todos</option>
+                        {% for value, label in combustivel_choices %}
+                            <option value="{{ value }}"
+                                {% if combustivel_selecionado == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Ações -->
+            <div class="filter-actions">
+                <button type="submit" class="btn-primary">Filtrar</button>
+                <a href="{% url 'lista_veiculos' %}" class="btn-clear">Limpar</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- 📋 TABELA -->
+    <table class="table" id="dataTable">
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Combustível</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
             {% for veiculo in veiculos %}
             <tr>
                 <td>{{ veiculo.placa }}</td>
                 <td>{{ veiculo.modelo }}</td>
                 <td>{{ veiculo.get_combustivel_display }}</td>
-                <td class="actions">
+                <td>
                     <a href="{% url 'editar_veiculo' veiculo.id %}" class="btn-edit">
                         ✏️ Editar
                     </a>
-
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhum veículo encontrado.</td>
+            </tr>
             {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Nenhum veículo cadastrado.</p>
-    {% endif %}
+        </tbody>
+    </table>
+
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const combustivelFilter = document.getElementById("combustivelFilter");
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+
+    function filtrarTabela() {
+        const search = searchInput.value.toLowerCase();
+        const combustivel = combustivelFilter.value.toLowerCase();
+
+        rows.forEach(row => {
+            const textoLinha = row.textContent.toLowerCase();
+
+            const matchSearch = textoLinha.includes(search);
+            const matchCombustivel = !combustivel || textoLinha.includes(combustivel);
+
+            row.style.display = (matchSearch && matchCombustivel) ? "" : "none";
+        });
+    }
+
+    searchInput.addEventListener("keyup", filtrarTabela);
+    combustivelFilter.addEventListener("change", filtrarTabela);
+});
+</script>
+
 {% endblock %}

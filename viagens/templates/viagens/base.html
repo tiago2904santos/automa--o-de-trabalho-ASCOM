@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    
     <title>{% block title %}Central de Viagens{% endblock %}</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -37,13 +37,13 @@
                 </a>
                 <ul class="submenu">
                     <li>
-                        <a href="#">
+                        <a href="{% url 'cadastro_oficio' %}">
                             <i data-lucide="plus-circle"></i>
                             Criar Ofício
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'lista_oficios' %}">
                             <i data-lucide="list"></i>
                             Lista de Ofícios
                         </a>
@@ -86,6 +86,7 @@
                                 <i data-lucide="car"></i>
                                 <span>Viaturas</span>
                                 <i data-lucide="plus"></i>
+
                             </a>
                         </li>
 

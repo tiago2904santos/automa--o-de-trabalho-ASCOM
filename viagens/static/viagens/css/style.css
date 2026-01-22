@@ -628,3 +628,132 @@ body {
 .btn-danger:hover {
     background-color: #b71c1c;
 }
+
+/* Ajuste para o Select2 ficar igual aos outros inputs */
+.select2-container .select2-selection--single {
+    height: 45px !important; /* Altura igual aos inputs */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 42px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 28px !important;
+    font-family: 'Montserrat', sans-serif; /* Sua fonte nova */
+    color: #333;
+}
+
+/* ==============================
+   FILTER BAR — DEFINITIVO
+============================== */
+
+.filter-bar {
+    background: #f8f9fd;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin-bottom: 25px;
+}
+
+/* FORM PRINCIPAL */
+.filter-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* 🔥 alinha tudo pelo fundo */
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* BLOCO ESQUERDO (BUSCA + CARGO) */
+.filter-left {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+/* CAMPOS */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 310px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.filter-group input,
+.filter-group select {
+    height: 42px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #cfd4dc;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #2b2bb2;
+    box-shadow: 0 0 0 3px rgba(43, 43, 178, 0.12);
+    outline: none;
+}
+
+/* AÇÕES */
+.filter-actions {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+/* BOTÃO CLEAR — AJUSTADO */
+.btn-clear {
+    height: 42px;
+    padding: 0 20px;
+    border-radius: 6px;
+
+    background-color: #f4f6fb;
+    color: #555;
+
+    border: 1px solid #d6dbf5;
+
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+.btn-clear:hover {
+    background-color: #e7ebff;
+    color: #2b2bb2;
+    border-color: #2b2bb2;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-left {
+        flex-direction: column;
+    }
+
+    .filter-actions {
+        justify-content: flex-end;
+    }
+}
