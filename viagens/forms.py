@@ -10,24 +10,30 @@ class ViajanteForm(forms.ModelForm):
         widgets = {
             "nome": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "NOME COMPLETO"
+                "placeholder": "NOME COMPLETO",
+                "autocomplete": "off"
             }),
             "cpf": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "000.000.000-00"
+                "placeholder": "000.000.000-00",
+                "autocomplete": "off"
             }),
             "rg": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "RG"
+                "placeholder": "RG",
+                "autocomplete": "off"
             }),
             "cargo": forms.Select(attrs={
-                "class": "form-control"
+                "class": "form-control",
+
             }),
             "telefone": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "(00) 00000-0000"
+                "placeholder": "(00) 00000-0000",
+                "autocomplete": "off"
             }),
         }
+
 
 class VeiculoForm(forms.ModelForm):
     class Meta:
