@@ -57,12 +57,16 @@ class VeiculoForm(forms.ModelForm):
 
 
 class OficioForm(forms.ModelForm):
-   
     class Meta:
         model = Oficio
         fields = [
-            'oficio', 'protocolo', 'sede', 'destino', 'servidor',
-            'data_saida', 'data_chegada', 'valor_diaria', 'veiculo', 'motorista', 'motivo', 'status'
+            'oficio', 'protocolo',
+            'estado_sede', 'cidade_sede',
+            'estado_destino', 'cidade_destino',
+            'servidor', 'motorista',
+            'data_saida', 'data_chegada',
+            'valor_diaria', 'veiculo',
+            'motivo', 'status'
         ]
         widgets = {
             'data_saida': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),

@@ -1,0 +1,150 @@
+{% extends 'viagens/base.html' %}
+
+{% block title %}Cadastro de Ofício{% endblock %}
+
+{% block content %}
+
+<div class="page-grid">
+
+    <!-- FORMULÁRIO -->
+    <div class="form-card">
+        <h2>Cadastro de Ofício</h2><br>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Campo de servidor com autocomplete -->
+            <div class="form-group autocomplete">
+                <label for="id_servidor">Servidor</label>
+                <input type="text" id="id_servidor" name="servidor" placeholder="Digite para buscar..." autocomplete="off">
+                <div class="autocomplete-list" id="servidor-list"></div>
+            </div>
+
+            <!-- Campo de motorista com autocomplete -->
+            <div class="form-group autocomplete">
+                <label for="id_motorista">Motorista</label>
+                <input type="text" id="id_motorista" name="motorista" placeholder="Digite para buscar..." autocomplete="off">
+                <div class="autocomplete-list" id="motorista-list"></div>
+            </div>
+
+            {% for field in form.visible_fields %}
+               
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small class="error">{{ field.errors|striptags }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-primary">Salvar</button>
+        </form>
+    </div>
+
+    <!-- CARD LATERAL -->
+    <div class="illustration-card">
+        <div class="icon">🧳</div>
+        <h3>Cadastro de Ofícios</h3>
+        <p>
+            Preencha os dados ao lado para registrar um novo ofício
+            no sistema da Central de Viagens ASCOM.
+        </p>
+        <p class="muted">
+            Todos os campos obrigatórios devem ser informados corretamente.
+        </p>
+    </div>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function setupAutocomplete(inputId, listId, url, limite = 7) {
+        const input = document.getElementById(inputId);
+        const list = document.getElementById(listId);
+
+        if (!input || !list) return;
+
+        // Função para criar opções
+        function criarLista(data) {
+            list.innerHTML = "";
+            data.slice(0, limite).forEach(item => {
+                const div = document.createElement("div");
+                div.textContent = item.nome;
+                div.dataset.id = item.id;
+                div.classList.add("autocomplete-item");
+                div.addEventListener("click", function() {
+                    input.value = item.nome;
+                    list.innerHTML = "";
+                });
+                list.appendChild(div);
+            });
+        }
+
+        // Requisição AJAX
+        input.addEventListener("input", function() {
+            const q = input.value.trim();
+            if (!q) {
+                list.innerHTML = "";
+                return;
+            }
+
+            fetch(`${url}?q=${encodeURIComponent(q)}`)
+                .then(res => res.json())
+                .then(data => criarLista(data));
+        });
+
+        // Fecha lista se clicar fora
+        document.addEventListener("click", function(e) {
+            if (!input.contains(e.target) && !list.contains(e.target)) {
+                list.innerHTML = "";
+            }
+        });
+    }
+
+    setupAutocomplete("id_servidor", "servidor-list", "{% url 'buscar_servidores' %}");
+    setupAutocomplete("id_motorista", "motorista-list", "{% url 'buscar_motoristas' %}");
+});
+</script>
+
+<!-- ================= CSS ================= -->
+<style>
+.autocomplete {
+    position: relative;
+}
+
+.autocomplete-list {
+    position: absolute;
+    z-index: 1000;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #cfd4dc;
+    border-top: none;
+    background-color: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 0 0 6px 6px;
+}
+
+.autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.autocomplete-item:hover {
+    background-color: #f4f6fb;
+}
+</style>
+
+{% endblock %}
+
+
+
+
+
+    // // Sede e Destino
+    // setupEstadoCidade("id_sede_estado", "id_sede_cidade_input", "id_sede_cidade", "sede-cidade-list", "{% url 'buscar_cidades' %}");
+    // setupEstadoCidade("id_destino_estado", "id_destino_cidade_input", "id_destino_cidade", "destino-cidade-list", "{% url 'buscar_cidades' %}");

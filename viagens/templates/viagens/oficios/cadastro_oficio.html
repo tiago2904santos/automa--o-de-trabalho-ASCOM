@@ -3,7 +3,6 @@
 {% block title %}Cadastro de Ofício{% endblock %}
 
 {% block content %}
-
 <div class="page-grid">
 
     <!-- FORMULÁRIO -->
@@ -13,29 +12,77 @@
         <form method="post">
             {% csrf_token %}
 
-            <!-- Campo de servidor com autocomplete -->
+            <!-- Servidor -->
             <div class="form-group autocomplete">
                 <label for="id_servidor">Servidor</label>
-                <input type="text" id="id_servidor" name="servidor" placeholder="Digite para buscar..." autocomplete="off">
+                <input type="text" id="id_servidor_input" placeholder="Digite para buscar..." autocomplete="off">
+                <input type="hidden" name="servidor" id="id_servidor">
                 <div class="autocomplete-list" id="servidor-list"></div>
             </div>
 
-            <!-- Campo de motorista com autocomplete -->
+            <!-- Motorista -->
             <div class="form-group autocomplete">
                 <label for="id_motorista">Motorista</label>
-                <input type="text" id="id_motorista" name="motorista" placeholder="Digite para buscar..." autocomplete="off">
+                <input type="text" id="id_motorista_input" placeholder="Digite para buscar..." autocomplete="off">
+                <input type="hidden" name="motorista" id="id_motorista">
                 <div class="autocomplete-list" id="motorista-list"></div>
             </div>
 
+            <!-- Placa -->
+            <div class="form-group autocomplete">
+                <label for="id_veiculo">Veículo (placa)</label>
+                <input type="text" id="id_veiculo_input" placeholder="Digite a placa..." autocomplete="off">
+                <input type="hidden" name="veiculo" id="id_veiculo">
+                <div class="autocomplete-list" id="veiculo-list"></div>
+            </div>
+
+            <!-- Estado / Cidade (Sede) -->
+            <div class="form-group">
+                <label for="id_sede_estado">Estado (Sede)</label>
+                <select id="id_sede_estado" class="form-control">
+                    <option value="">Selecione o estado</option>
+                    {% for estado in estados %}
+                        <option value="{{ estado.id }}">{{ estado.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group autocomplete">
+                <label for="id_sede_cidade">Cidade (Sede)</label>
+                <input type="text" id="id_sede_cidade_input" placeholder="Selecione o estado primeiro..." autocomplete="off">
+                <input type="hidden" name="sede" id="id_sede_cidade">
+                <div class="autocomplete-list" id="sede-cidade-list"></div>
+            </div>
+
+            <!-- Estado / Cidade (Destino) -->
+            <div class="form-group">
+                <label for="id_destino_estado">Estado (Destino)</label>
+                <select id="id_destino_estado" class="form-control">
+                    <option value="">Selecione o estado</option>
+                    {% for estado in estados %}
+                        <option value="{{ estado.id }}">{{ estado.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group autocomplete">
+                <label for="id_destino_cidade">Cidade (Destino)</label>
+                <input type="text" id="id_destino_cidade_input" placeholder="Selecione o estado primeiro..." autocomplete="off">
+                <input type="hidden" name="destino" id="id_destino_cidade">
+                <div class="autocomplete-list" id="destino-cidade-list"></div>
+            </div>
+
+            <!-- Campos restantes do form -->
             {% for field in form.visible_fields %}
-               
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <small class="error">{{ field.errors|striptags }}</small>
-                    {% endif %}
-                </div>
+                {% if field.name not in "servidor motorista veiculo sede destino" %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <small class="error">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
 
             <button type="submit" class="btn-primary">Salvar</button>
@@ -59,54 +106,56 @@
 
 <!-- ================= JS ================= -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+function setupAutocomplete(inputId, hiddenId, listId, url, campoExibir = "nome") {
+    const input = document.getElementById(inputId);
+    const hidden = document.getElementById(hiddenId);
+    const list = document.getElementById(listId);
 
-    function setupAutocomplete(inputId, listId, url, limite = 7) {
-        const input = document.getElementById(inputId);
-        const list = document.getElementById(listId);
-
-        if (!input || !list) return;
-
-        // Função para criar opções
-        function criarLista(data) {
+    input.addEventListener("input", async () => {
+        const query = input.value.trim();
+        if (!query) {
             list.innerHTML = "";
-            data.slice(0, limite).forEach(item => {
-                const div = document.createElement("div");
-                div.textContent = item.nome;
-                div.dataset.id = item.id;
-                div.classList.add("autocomplete-item");
-                div.addEventListener("click", function() {
-                    input.value = item.nome;
-                    list.innerHTML = "";
-                });
-                list.appendChild(div);
-            });
+            hidden.value = "";
+            return;
         }
 
-        // Requisição AJAX
-        input.addEventListener("input", function() {
-            const q = input.value.trim();
-            if (!q) {
-                list.innerHTML = "";
-                return;
-            }
+        try {
+            const response = await fetch(`${url}?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
 
-            fetch(`${url}?q=${encodeURIComponent(q)}`)
-                .then(res => res.json())
-                .then(data => criarLista(data));
-        });
+            list.innerHTML = "";
+            data.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item[campoExibir]; // campo correto (nome ou placa)
+                li.classList.add("autocomplete-item");
 
-        // Fecha lista se clicar fora
-        document.addEventListener("click", function(e) {
-            if (!input.contains(e.target) && !list.contains(e.target)) {
-                list.innerHTML = "";
-            }
-        });
-    }
+                li.addEventListener("click", () => {
+                    input.value = item[campoExibir];
+                    hidden.value = item.id;
+                    list.innerHTML = "";
+                });
 
-    setupAutocomplete("id_servidor", "servidor-list", "{% url 'buscar_servidores' %}");
-    setupAutocomplete("id_motorista", "motorista-list", "{% url 'buscar_motoristas' %}");
-});
+                list.appendChild(li);
+            });
+        } catch (err) {
+            console.error("Erro no autocomplete:", err);
+        }
+    });
+
+    // Fecha a lista se clicar fora
+    document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !list.contains(e.target)) {
+            list.innerHTML = "";
+        }
+    });
+}
+
+// =====================
+// Exemplo de uso
+// =====================
+setupAutocomplete("id_servidor_input", "id_servidor", "servidor-list", "{% url 'buscar_servidores' %}", "nome");
+setupAutocomplete("id_motorista_input", "id_motorista", "motorista-list", "{% url 'buscar_motoristas' %}", "nome");
+setupAutocomplete("id_veiculo_input", "id_veiculo", "veiculo-list", "{% url 'buscar_veiculos' %}", "placa");
 </script>
 
 <!-- ================= CSS ================= -->

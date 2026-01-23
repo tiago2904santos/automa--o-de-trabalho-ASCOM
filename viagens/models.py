@@ -85,13 +85,60 @@ class Veiculo(models.Model):
 
 # ==============OFicio=======================================================
 
+ESTADOS = [
+        ('AC', 'Acre'),
+        ('AL', 'Alagoas'),
+        ('AP', 'Amapá'),
+        ('AM', 'Amazonas'),
+        ('BA', 'Bahia'),
+        ('CE', 'Ceará'),
+        ('DF', 'Distrito Federal'),
+        ('ES', 'Espírito Santo'),
+        ('GO', 'Goiás'),
+        ('MA', 'Maranhão'),
+        ('MT', 'Mato Grosso'),
+        ('MS', 'Mato Grosso do Sul'),
+        ('MG', 'Minas Gerais'),
+        ('PA', 'Pará'),
+        ('PB', 'Paraíba'),
+        ('PR', 'Paraná'),
+        ('PE', 'Pernambuco'),
+        ('PI', 'Piauí'),
+        ('RJ', 'Rio de Janeiro'),
+        ('RN', 'Rio Grande do Norte'),
+        ('RS', 'Rio Grande do Sul'),
+        ('RO', 'Rondônia'),
+        ('RR', 'Roraima'),
+        ('SC', 'Santa Catarina'),
+        ('SP', 'São Paulo'),
+        ('SE', 'Sergipe'),
+        ('TO', 'Tocantins'),
+    ]
 
-class Oficio(models.Model):
+
+class Cidade(models.Model):
+    cidade = models.CharField(max_length=100)
+    estado = models.CharField(max_length=2, choices=ESTADOS)
+
+    def __str__(self):
+        return f"{self.cidade}/{self.estado}"
+
+    @staticmethod
+    def get_cidades_por_estado(estado):
+        return Cidade.objects.filter(estado=estado).order_by('cidade')
+
+    
+class Oficio(models.Model):    
+
     # Oficio
     oficio = models.CharField(max_length=50)
     protocolo = models.CharField(max_length=50)
-    sede = models.CharField(max_length=100)
-    destino = models.CharField(max_length=100)
+    # destino
+    estado_sede = models.CharField(max_length=2, choices=ESTADOS, default="PR")
+    cidade_sede = models.ForeignKey(Cidade, on_delete=models.SET_NULL, null=True, blank=True, related_name="sede_oficios")
+    
+    estado_destino = models.CharField(max_length=2, choices=ESTADOS, default="PR")
+    cidade_destino = models.ForeignKey(Cidade, on_delete=models.SET_NULL, null=True, blank=True, related_name="destino_oficios")
 
     # Servidores
     servidor = models.ForeignKey(
@@ -118,4 +165,8 @@ class Oficio(models.Model):
     ], default='pendente')
 
     def __str__(self):
-        return f"{self.oficio} - {self.servidor} - {self.destino}"
+        destino = self.cidade_destino or "Sem destino"
+        return f"{self.oficio} - {self.servidor} - {destino}"
+
+
+

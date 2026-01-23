@@ -288,3 +288,13 @@ def buscar_motoristas(request):
 
     data = list(motoristas)
     return JsonResponse(data, safe=False)
+
+
+def buscar_veiculos(request):
+    q = request.GET.get("q", "")
+    placa = Veiculo.objects.filter(
+        placa__icontains=q
+    ).values("id", "placa").order_by("placa")[:7]
+
+    data = list(placa)
+    return JsonResponse(data, safe=False)
