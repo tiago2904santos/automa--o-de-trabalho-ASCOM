@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .forms import ViajanteForm, VeiculoForm, OficioForm
-from .models import Viajante, Veiculo, Oficio
+from .models import Viajante, Veiculo, Oficio, Cidade
 import django.db.models as models
 
 # ================= DASHBOARD ================= #
@@ -297,4 +297,23 @@ def buscar_veiculos(request):
     ).values("id", "placa").order_by("placa")[:7]
 
     data = list(placa)
+    return JsonResponse(data, safe=False)
+
+def buscar_cidades(request):
+    q = request.GET.get("q", "")
+    estado = request.GET.get("estado", "")
+
+    cidades = Cidade.objects.all()
+
+    if estado:
+        cidades = cidades.filter(estado=estado)
+
+    if q:
+        cidades = cidades.filter(cidade__icontains=q)
+
+    data = list(
+        cidades.order_by("cidade")
+        .values("id", "cidade")[:7]
+    )
+
     return JsonResponse(data, safe=False)

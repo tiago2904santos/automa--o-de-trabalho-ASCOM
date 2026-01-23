@@ -5,78 +5,67 @@
 {% block content %}
 <div class="page-grid">
 
-    <!-- FORMULÁRIO -->
     <div class="form-card">
         <h2>Cadastro de Ofício</h2><br>
 
         <form method="post">
             {% csrf_token %}
 
-            <!-- Servidor -->
+            <!-- ================= SERVIDOR ================= -->
             <div class="form-group autocomplete">
-                <label for="id_servidor">Servidor</label>
-                <input type="text" id="id_servidor_input" placeholder="Digite para buscar..." autocomplete="off">
-                <input type="hidden" name="servidor" id="id_servidor">
+                <label>Servidor(es)</label>
+                <input type="text" id="servidor_input" placeholder="Digite para buscar..." autocomplete="off">
+                <input type="hidden" name="servidor" id="servidor_id">
                 <div class="autocomplete-list" id="servidor-list"></div>
             </div>
 
-            <!-- Motorista -->
+            <!-- ================= MOTORISTA ================= -->
             <div class="form-group autocomplete">
-                <label for="id_motorista">Motorista</label>
-                <input type="text" id="id_motorista_input" placeholder="Digite para buscar..." autocomplete="off">
-                <input type="hidden" name="motorista" id="id_motorista">
+                <label>Motorista</label>
+                <input type="text" id="motorista_input" placeholder="Digite para buscar..." autocomplete="off">
+                <input type="hidden" name="motorista" id="motorista_id">
                 <div class="autocomplete-list" id="motorista-list"></div>
             </div>
 
-            <!-- Placa -->
+            <!-- ================= VEÍCULO ================= -->
             <div class="form-group autocomplete">
-                <label for="id_veiculo">Veículo (placa)</label>
-                <input type="text" id="id_veiculo_input" placeholder="Digite a placa..." autocomplete="off">
-                <input type="hidden" name="veiculo" id="id_veiculo">
+                <label>Veículo (placa)</label>
+                <input type="text" id="veiculo_input" placeholder="Digite a placa..." autocomplete="off">
+                <input type="hidden" name="veiculo" id="veiculo_id">
                 <div class="autocomplete-list" id="veiculo-list"></div>
             </div>
 
-            <!-- Estado / Cidade (Sede) -->
+            <!-- ================= SEDE ================= -->
             <div class="form-group">
-                <label for="id_sede_estado">Estado (Sede)</label>
-                <select id="id_sede_estado" class="form-control">
-                    <option value="">Selecione o estado</option>
-                    {% for estado in estados %}
-                        <option value="{{ estado.id }}">{{ estado.nome }}</option>
-                    {% endfor %}
-                </select>
+                <label>Sede (Estado)</label>
+                {{ form.estado_sede }}
             </div>
 
             <div class="form-group autocomplete">
-                <label for="id_sede_cidade">Cidade (Sede)</label>
-                <input type="text" id="id_sede_cidade_input" placeholder="Selecione o estado primeiro..." autocomplete="off">
-                <input type="hidden" name="sede" id="id_sede_cidade">
-                <div class="autocomplete-list" id="sede-cidade-list"></div>
+                <label>Sede (Cidade)</label>
+                <input type="text" id="cidade_sede_input" placeholder="Digite a cidade..." autocomplete="off">
+                <input type="hidden" name="cidade_sede" id="cidade_sede_id">
+                <div class="autocomplete-list" id="cidade-sede-list"></div>
             </div>
 
-            <!-- Estado / Cidade (Destino) -->
+            <!-- ================= DESTINO ================= -->
             <div class="form-group">
-                <label for="id_destino_estado">Estado (Destino)</label>
-                <select id="id_destino_estado" class="form-control">
-                    <option value="">Selecione o estado</option>
-                    {% for estado in estados %}
-                        <option value="{{ estado.id }}">{{ estado.nome }}</option>
-                    {% endfor %}
-                </select>
+                <label>Destino (Estado)</label>
+                {{ form.estado_destino }}
             </div>
 
             <div class="form-group autocomplete">
-                <label for="id_destino_cidade">Cidade (Destino)</label>
-                <input type="text" id="id_destino_cidade_input" placeholder="Selecione o estado primeiro..." autocomplete="off">
-                <input type="hidden" name="destino" id="id_destino_cidade">
-                <div class="autocomplete-list" id="destino-cidade-list"></div>
+                <label>Destino (Cidade)</label>
+                <input type="text" id="cidade_destino_input" placeholder="Digite a cidade..." autocomplete="off">
+                <input type="hidden" name="cidade_destino" id="cidade_destino_id">
+                <div class="autocomplete-list" id="cidade-destino-list"></div>
             </div>
 
-            <!-- Campos restantes do form -->
+            <!-- ================= RESTANTE DO FORM ================= -->
             {% for field in form.visible_fields %}
-                {% if field.name not in "servidor motorista veiculo sede destino" %}
+                {% if field.name not in "servidor motorista veiculo estado_sede cidade_sede estado_destino cidade_destino" %}
                     <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <label>{{ field.label }}</label>
                         {{ field }}
                         {% if field.errors %}
                             <small class="error">{{ field.errors|striptags }}</small>
@@ -89,103 +78,77 @@
         </form>
     </div>
 
-    <!-- CARD LATERAL -->
     <div class="illustration-card">
         <div class="icon">🧳</div>
         <h3>Cadastro de Ofícios</h3>
-        <p>
-            Preencha os dados ao lado para registrar um novo ofício
-            no sistema da Central de Viagens ASCOM.
-        </p>
-        <p class="muted">
-            Todos os campos obrigatórios devem ser informados corretamente.
-        </p>
+        <p>Preencha os dados para registrar um novo ofício.</p>
     </div>
 
 </div>
 
 <!-- ================= JS ================= -->
 <script>
-function setupAutocomplete(inputId, hiddenId, listId, url, campoExibir = "nome") {
+function setupAutocomplete(inputId, hiddenId, listId, url, labelField, extraParams = () => "") {
     const input = document.getElementById(inputId);
     const hidden = document.getElementById(hiddenId);
     const list = document.getElementById(listId);
 
     input.addEventListener("input", async () => {
-        const query = input.value.trim();
-        if (!query) {
+        const q = input.value.trim();
+        if (!q) {
             list.innerHTML = "";
             hidden.value = "";
             return;
         }
 
-        try {
-            const response = await fetch(`${url}?q=${encodeURIComponent(query)}`);
-            const data = await response.json();
+        const response = await fetch(`${url}?q=${q}${extraParams()}`);
+        const data = await response.json();
 
-            list.innerHTML = "";
-            data.forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = item[campoExibir]; // campo correto (nome ou placa)
-                li.classList.add("autocomplete-item");
+        list.innerHTML = "";
+        data.forEach(item => {
+            const div = document.createElement("div");
+            div.textContent = item[labelField];
+            div.classList.add("autocomplete-item");
 
-                li.addEventListener("click", () => {
-                    input.value = item[campoExibir];
-                    hidden.value = item.id;
-                    list.innerHTML = "";
-                });
+            div.onclick = () => {
+                input.value = item[labelField];
+                hidden.value = item.id;
+                list.innerHTML = "";
+            };
 
-                list.appendChild(li);
-            });
-        } catch (err) {
-            console.error("Erro no autocomplete:", err);
-        }
+            list.appendChild(div);
+        });
     });
 
-    // Fecha a lista se clicar fora
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", e => {
         if (!input.contains(e.target) && !list.contains(e.target)) {
             list.innerHTML = "";
         }
     });
 }
 
-// =====================
-// Exemplo de uso
-// =====================
-setupAutocomplete("id_servidor_input", "id_servidor", "servidor-list", "{% url 'buscar_servidores' %}", "nome");
-setupAutocomplete("id_motorista_input", "id_motorista", "motorista-list", "{% url 'buscar_motoristas' %}", "nome");
-setupAutocomplete("id_veiculo_input", "id_veiculo", "veiculo-list", "{% url 'buscar_veiculos' %}", "placa");
+/* ===== AUTOCOMPLETES ===== */
+setupAutocomplete("servidor_input", "servidor_id", "servidor-list", "{% url 'buscar_servidores' %}", "nome");
+setupAutocomplete("motorista_input", "motorista_id", "motorista-list", "{% url 'buscar_motoristas' %}", "nome");
+setupAutocomplete("veiculo_input", "veiculo_id", "veiculo-list", "{% url 'buscar_veiculos' %}", "placa");
+
+setupAutocomplete(
+    "cidade_sede_input",
+    "cidade_sede_id",
+    "cidade-sede-list",
+    "{% url 'buscar_cidades' %}",
+    "cidade",
+    () => `&estado=${document.getElementById("id_estado_sede").value}`
+);
+
+setupAutocomplete(
+    "cidade_destino_input",
+    "cidade_destino_id",
+    "cidade-destino-list",
+    "{% url 'buscar_cidades' %}",
+    "cidade",
+    () => `&estado=${document.getElementById("id_estado_destino").value}`
+);
 </script>
-
-<!-- ================= CSS ================= -->
-<style>
-.autocomplete {
-    position: relative;
-}
-
-.autocomplete-list {
-    position: absolute;
-    z-index: 1000;
-    top: 100%;
-    left: 0;
-    right: 0;
-    border: 1px solid #cfd4dc;
-    border-top: none;
-    background-color: #fff;
-    max-height: 200px;
-    overflow-y: auto;
-    border-radius: 0 0 6px 6px;
-}
-
-.autocomplete-item {
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
-.autocomplete-item:hover {
-    background-color: #f4f6fb;
-}
-</style>
 
 {% endblock %}

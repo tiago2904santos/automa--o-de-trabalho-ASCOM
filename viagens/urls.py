@@ -5,6 +5,8 @@ urlpatterns = [
     path("ajax/servidores/", views.buscar_servidores, name="buscar_servidores"),
     path("ajax/motoristas/", views.buscar_motoristas, name="buscar_motoristas"),
     path("ajax/veiculos/", views.buscar_veiculos, name="buscar_veiculos"),
+    path("ajax/cidades/", views.buscar_cidades, name="buscar_cidades"),
+
 
     # dashboard
     path("", views.dashboard, name="dashboard"),
