@@ -14,25 +14,62 @@
             <!-- ================= SERVIDOR ================= -->
             <div class="form-group autocomplete">
                 <label>Servidor(es)</label>
-                <input type="text" id="servidor_input" placeholder="Digite para buscar..." autocomplete="off">
-                <input type="hidden" name="servidor" id="servidor_id">
+                <input type="text" id="servidor_input" placeholder="Digite para buscar..." autocomplete="off" value="{{ form.instance.servidor.nome|default_if_none:'' }}">
+                <input type="hidden" name="servidor" id="servidor_id" value="{{ form.instance.servidor.id|default_if_none:'' }}">
                 <div class="autocomplete-list" id="servidor-list"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>RG</label>
+                    <input type="text" id="servidor_rg" class="form-control" value="{{ form.instance.servidor.rg|default_if_none:'' }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>CPF</label>
+                    <input type="text" id="servidor_cpf" class="form-control" value="{{ form.instance.servidor.cpf|default_if_none:'' }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Cargo</label>
+                    <input type="text" id="servidor_cargo" class="form-control" value="{{ form.instance.servidor.cargo|default_if_none:'' }}" readonly>
+                </div>
             </div>
 
             <!-- ================= MOTORISTA ================= -->
             <div class="form-group autocomplete">
                 <label>Motorista</label>
-                <input type="text" id="motorista_input" placeholder="Digite para buscar..." autocomplete="off">
-                <input type="hidden" name="motorista" id="motorista_id">
+                <input
+                    type="text"
+                    id="motorista_input"
+                    name="motorista_nome"
+                    class="form-control"
+                    placeholder="Digite o nome do motorista..."
+                    autocomplete="off"
+                    value="{% if form.instance.motorista %}{{ form.instance.motorista.nome }}{% else %}{{ form.instance.motorista_nome|default_if_none:'' }}{% endif %}"
+                >
+                <input type="hidden" name="motorista" id="motorista_id" value="{{ form.instance.motorista.id|default_if_none:'' }}">
                 <div class="autocomplete-list" id="motorista-list"></div>
+                {% if form.motorista_nome.errors %}
+                    <small class="error">{{ form.motorista_nome.errors|striptags }}</small>
+                {% endif %}
             </div>
 
             <!-- ================= VEÍCULO ================= -->
             <div class="form-group autocomplete">
                 <label>Veículo (placa)</label>
-                <input type="text" id="veiculo_input" placeholder="Digite a placa..." autocomplete="off">
-                <input type="hidden" name="veiculo" id="veiculo_id">
+                <input type="text" id="veiculo_input" placeholder="Digite a placa..." autocomplete="off" value="{{ form.instance.veiculo.placa|default_if_none:'' }}">
+                <input type="hidden" name="veiculo" id="veiculo_id" value="{{ form.instance.veiculo.id|default_if_none:'' }}">
                 <div class="autocomplete-list" id="veiculo-list"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <input type="text" id="veiculo_modelo" class="form-control" value="{{ form.instance.veiculo.modelo|default_if_none:'' }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Combustível</label>
+                    <input type="text" id="veiculo_combustivel" class="form-control" value="{% if form.instance.veiculo %}{{ form.instance.veiculo.get_combustivel_display }}{% endif %}" readonly>
+                </div>
             </div>
 
             <!-- ================= SEDE ================= -->
@@ -43,8 +80,8 @@
 
             <div class="form-group autocomplete">
                 <label>Sede (Cidade)</label>
-                <input type="text" id="cidade_sede_input" placeholder="Digite a cidade..." autocomplete="off">
-                <input type="hidden" name="cidade_sede" id="cidade_sede_id">
+                <input type="text" id="cidade_sede_input" placeholder="Digite a cidade..." autocomplete="off" value="{{ form.instance.cidade_sede.cidade|default_if_none:'' }}">
+                <input type="hidden" name="cidade_sede" id="cidade_sede_id" value="{{ form.instance.cidade_sede.id|default_if_none:'' }}">
                 <div class="autocomplete-list" id="cidade-sede-list"></div>
             </div>
 
@@ -56,14 +93,24 @@
 
             <div class="form-group autocomplete">
                 <label>Destino (Cidade)</label>
-                <input type="text" id="cidade_destino_input" placeholder="Digite a cidade..." autocomplete="off">
-                <input type="hidden" name="cidade_destino" id="cidade_destino_id">
+                <input type="text" id="cidade_destino_input" placeholder="Digite a cidade..." autocomplete="off" value="{{ form.instance.cidade_destino.cidade|default_if_none:'' }}">
+                <input type="hidden" name="cidade_destino" id="cidade_destino_id" value="{{ form.instance.cidade_destino.id|default_if_none:'' }}">
                 <div class="autocomplete-list" id="cidade-destino-list"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Roteiro de ida</label>
+                {{ form.roteiro_ida }}
+            </div>
+
+            <div class="form-group">
+                <label>Roteiro de volta</label>
+                {{ form.roteiro_volta }}
             </div>
 
             <!-- ================= RESTANTE DO FORM ================= -->
             {% for field in form.visible_fields %}
-                {% if field.name not in "servidor motorista veiculo estado_sede cidade_sede estado_destino cidade_destino" %}
+                {% if field.name not in "servidor motorista motorista_nome veiculo estado_sede cidade_sede estado_destino cidade_destino roteiro_ida roteiro_volta" %}
                     <div class="form-group">
                         <label>{{ field.label }}</label>
                         {{ field }}
@@ -88,16 +135,16 @@
 
 <!-- ================= JS ================= -->
 <script>
-function setupAutocomplete(inputId, hiddenId, listId, url, labelField, extraParams = () => "") {
+function setupAutocomplete(inputId, hiddenId, listId, url, labelField, extraParams = () => "", onSelect = () => {}) {
     const input = document.getElementById(inputId);
     const hidden = document.getElementById(hiddenId);
     const list = document.getElementById(listId);
 
     input.addEventListener("input", async () => {
         const q = input.value.trim();
+        hidden.value = "";
         if (!q) {
             list.innerHTML = "";
-            hidden.value = "";
             return;
         }
 
@@ -114,6 +161,7 @@ function setupAutocomplete(inputId, hiddenId, listId, url, labelField, extraPara
                 input.value = item[labelField];
                 hidden.value = item.id;
                 list.innerHTML = "";
+                onSelect(item.id);
             };
 
             list.appendChild(div);
@@ -128,9 +176,52 @@ function setupAutocomplete(inputId, hiddenId, listId, url, labelField, extraPara
 }
 
 /* ===== AUTOCOMPLETES ===== */
-setupAutocomplete("servidor_input", "servidor_id", "servidor-list", "{% url 'buscar_servidores' %}", "nome");
 setupAutocomplete("motorista_input", "motorista_id", "motorista-list", "{% url 'buscar_motoristas' %}", "nome");
-setupAutocomplete("veiculo_input", "veiculo_id", "veiculo-list", "{% url 'buscar_veiculos' %}", "placa");
+
+async function atualizarServidor(viajanteId) {
+    if (!viajanteId) {
+        document.getElementById("servidor_rg").value = "";
+        document.getElementById("servidor_cpf").value = "";
+        document.getElementById("servidor_cargo").value = "";
+        return;
+    }
+    const response = await fetch("{% url 'detalhes_viajante' 0 %}".replace("0", viajanteId));
+    const data = await response.json();
+    document.getElementById("servidor_rg").value = data.rg || "";
+    document.getElementById("servidor_cpf").value = data.cpf || "";
+    document.getElementById("servidor_cargo").value = data.cargo || "";
+}
+
+async function atualizarVeiculo(veiculoId) {
+    if (!veiculoId) {
+        document.getElementById("veiculo_modelo").value = "";
+        document.getElementById("veiculo_combustivel").value = "";
+        return;
+    }
+    const response = await fetch("{% url 'detalhes_veiculo' 0 %}".replace("0", veiculoId));
+    const data = await response.json();
+    document.getElementById("veiculo_modelo").value = data.modelo || "";
+    document.getElementById("veiculo_combustivel").value = data.combustivel || "";
+}
+
+setupAutocomplete(
+    "servidor_input",
+    "servidor_id",
+    "servidor-list",
+    "{% url 'buscar_servidores' %}",
+    "nome",
+    () => "",
+    atualizarServidor
+);
+setupAutocomplete(
+    "veiculo_input",
+    "veiculo_id",
+    "veiculo-list",
+    "{% url 'buscar_veiculos' %}",
+    "placa",
+    () => "",
+    atualizarVeiculo
+);
 
 setupAutocomplete(
     "cidade_sede_input",
@@ -149,6 +240,17 @@ setupAutocomplete(
     "cidade",
     () => `&estado=${document.getElementById("id_estado_destino").value}`
 );
+
+document.addEventListener("DOMContentLoaded", () => {
+    const servidorId = document.getElementById("servidor_id").value;
+    const veiculoId = document.getElementById("veiculo_id").value;
+    if (servidorId) {
+        atualizarServidor(servidorId);
+    }
+    if (veiculoId) {
+        atualizarVeiculo(veiculoId);
+    }
+});
 </script>
 
 {% endblock %}

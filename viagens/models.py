@@ -148,15 +148,20 @@ class Oficio(models.Model):
     )
     motorista = models.ForeignKey(
         'Viajante',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='oficios_motorista'  # <--- related_name único
     )
+    motorista_nome = models.CharField(max_length=255, blank=True)
 
     # Viagem
     data_saida = models.DateField()
     data_chegada = models.DateField()
     valor_diaria = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     veiculo = models.ForeignKey('Veiculo', on_delete=models.CASCADE)
+    roteiro_ida = models.TextField(blank=True)
+    roteiro_volta = models.TextField(blank=True)
     motivo = models.TextField()
     status = models.CharField(max_length=20, choices=[
         ('pendente', 'Pendente'),
@@ -167,6 +172,5 @@ class Oficio(models.Model):
     def __str__(self):
         destino = self.cidade_destino or "Sem destino"
         return f"{self.oficio} - {self.servidor} - {destino}"
-
 
 

@@ -211,7 +211,8 @@ def lista_oficios(request):
         oficios = oficios.filter(
             models.Q(oficio__icontains=busca) |
             models.Q(protocolo__icontains=busca) |
-            models.Q(destino__icontains=busca) |
+            models.Q(cidade_destino__cidade__icontains=busca) |
+            models.Q(estado_destino__icontains=busca) |
             models.Q(servidor__nome__icontains=busca)
         )
 
@@ -220,7 +221,7 @@ def lista_oficios(request):
         oficios = oficios.filter(status=status)
 
     # ↕️ Ordenação segura
-    campos_validos = ["oficio", "protocolo", "destino", "servidor__nome"]
+    campos_validos = ["oficio", "protocolo", "cidade_destino__cidade", "servidor__nome"]
     campo_order = order.lstrip("-")
     if campo_order in campos_validos:
         oficios = oficios.order_by(order)
@@ -263,6 +264,24 @@ def excluir_oficio(request, oficio_id):
         request,
         "viagens/oficios/excluir_oficio.html",
         {"oficio": oficio}
+    )
+
+
+def documento_oficio(request, oficio_id):
+    oficio = get_object_or_404(Oficio, id=oficio_id)
+    motorista_exibicao = (
+        oficio.motorista.nome
+        if oficio.motorista
+        else oficio.motorista_nome
+    )
+
+    return render(
+        request,
+        "viagens/oficios/documento_oficio.html",
+        {
+            "oficio": oficio,
+            "motorista_exibicao": motorista_exibicao,
+        }
     )
 
 
@@ -317,3 +336,24 @@ def buscar_cidades(request):
     )
 
     return JsonResponse(data, safe=False)
+
+
+def detalhes_viajante(request, viajante_id):
+    viajante = get_object_or_404(Viajante, id=viajante_id)
+    data = {
+        "nome": viajante.nome,
+        "rg": viajante.rg,
+        "cpf": viajante.cpf,
+        "cargo": viajante.cargo,
+    }
+    return JsonResponse(data)
+
+
+def detalhes_veiculo(request, veiculo_id):
+    veiculo = get_object_or_404(Veiculo, id=veiculo_id)
+    data = {
+        "placa": veiculo.placa,
+        "modelo": veiculo.modelo,
+        "combustivel": veiculo.get_combustivel_display(),
+    }
+    return JsonResponse(data)
