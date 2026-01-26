@@ -63,14 +63,21 @@ class OficioForm(forms.ModelForm):
             'oficio', 'protocolo',
             'estado_sede', 'cidade_sede',
             'estado_destino', 'cidade_destino',
-            'servidor', 'motorista',
+            'servidor', 'motorista', 'motorista_nome',
             'data_saida', 'data_chegada',
             'valor_diaria', 'veiculo',
+            'roteiro_ida', 'roteiro_volta',
             'motivo', 'status'
         ]
         widgets = {
             'data_saida': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'data_chegada': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'motorista_nome': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nome do motorista'
+            }),
+            'roteiro_ida': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+            'roteiro_volta': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
             'motivo': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
         }
 
@@ -94,5 +101,15 @@ class OficioForm(forms.ModelForm):
             if data_chegada < data_saida:
                 raise forms.ValidationError("A data de chegada não pode ser anterior à data de saída.")
         return data_chegada
+
+    def clean(self):
+        cleaned_data = super().clean()
+        motorista = cleaned_data.get("motorista")
+        motorista_nome = (cleaned_data.get("motorista_nome") or "").strip()
+
+        if not motorista and not motorista_nome:
+            self.add_error("motorista_nome", "Informe o motorista ou selecione um motorista cadastrado.")
+
+        return cleaned_data
 
   

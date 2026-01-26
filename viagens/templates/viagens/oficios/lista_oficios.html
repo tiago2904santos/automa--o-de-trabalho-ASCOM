@@ -69,10 +69,13 @@
             <tr>
                 <td>{{ oficio.oficio }}</td>
                 <td>{{ oficio.protocolo }}</td>
-                <td>{{ oficio.destino }}</td>
+                <td>{{ oficio.cidade_destino|default:"Sem destino" }}</td>
                 <td>{{ oficio.servidor }}</td>
                 <td>{{ oficio.get_status_display }}</td>
                 <td>
+                    <a href="{% url 'documento_oficio' oficio.id %}" class="btn-link">
+                        🧾 Documento
+                    </a>
                     <a href="{% url 'editar_oficio' oficio.id %}" class="btn-edit">
                         ✏️ Editar
                     </a>

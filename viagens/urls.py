@@ -6,6 +6,8 @@ urlpatterns = [
     path("ajax/motoristas/", views.buscar_motoristas, name="buscar_motoristas"),
     path("ajax/veiculos/", views.buscar_veiculos, name="buscar_veiculos"),
     path("ajax/cidades/", views.buscar_cidades, name="buscar_cidades"),
+    path("ajax/viajantes/<int:viajante_id>/", views.detalhes_viajante, name="detalhes_viajante"),
+    path("ajax/veiculos/<int:veiculo_id>/", views.detalhes_veiculo, name="detalhes_veiculo"),
 
 
     # dashboard
@@ -13,6 +15,7 @@ urlpatterns = [
     # oficios
     path("oficios/", views.lista_oficios, name="lista_oficios"),
     path("oficios/cadastro/", views.cadastro_oficio, name="cadastro_oficio"),
+    path("oficios/<int:oficio_id>/documento/", views.documento_oficio, name="documento_oficio"),
     path("oficios/editar/<int:oficio_id>/", views.editar_oficio, name="editar_oficio"),
     path("oficios/excluir/<int:oficio_id>/", views.excluir_oficio, name="excluir_oficio"),
     # Servidores
@@ -26,4 +29,3 @@ urlpatterns = [
     path("veiculos/editar/<int:veiculo_id>/", views.editar_veiculo, name="editar_veiculo"),
     path("veiculos/excluir/<int:veiculo_id>/", views.excluir_veiculo, name="excluir_veiculo"),
 ]
-

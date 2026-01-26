@@ -1,0 +1,96 @@
+{% extends "viagens/base.html" %}
+
+{% block title %}Documento do Ofício {{ oficio.oficio }}{% endblock %}
+
+{% block content %}
+<div class="document-card">
+    <div class="document-header">
+        <div>
+            <h2>Documento de Viagem</h2>
+            <p>Ofício nº {{ oficio.oficio }} • Protocolo {{ oficio.protocolo }}</p>
+        </div>
+        <button class="btn-primary" onclick="window.print()">Imprimir</button>
+    </div>
+
+    <div class="document-section">
+        <h3>Dados do Servidor</h3>
+        <div class="document-row">
+            <div>
+                <span class="document-label">Nome</span>
+                <span>{{ oficio.servidor.nome }}</span>
+            </div>
+            <div>
+                <span class="document-label">RG</span>
+                <span>{{ oficio.servidor.rg }}</span>
+            </div>
+            <div>
+                <span class="document-label">CPF</span>
+                <span>{{ oficio.servidor.cpf }}</span>
+            </div>
+            <div>
+                <span class="document-label">Cargo</span>
+                <span>{{ oficio.servidor.cargo }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-section">
+        <h3>Destino e Datas</h3>
+        <div class="document-row">
+            <div>
+                <span class="document-label">Sede</span>
+                <span>{{ oficio.cidade_sede|default:"-" }}</span>
+            </div>
+            <div>
+                <span class="document-label">Destino</span>
+                <span>{{ oficio.cidade_destino|default:"-" }}</span>
+            </div>
+            <div>
+                <span class="document-label">Saída</span>
+                <span>{{ oficio.data_saida }}</span>
+            </div>
+            <div>
+                <span class="document-label">Chegada</span>
+                <span>{{ oficio.data_chegada }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-section">
+        <h3>Transporte</h3>
+        <div class="document-row">
+            <div>
+                <span class="document-label">Veículo</span>
+                <span>{{ oficio.veiculo.placa }} • {{ oficio.veiculo.modelo }}</span>
+            </div>
+            <div>
+                <span class="document-label">Combustível</span>
+                <span>{{ oficio.veiculo.get_combustivel_display }}</span>
+            </div>
+            <div>
+                <span class="document-label">Motorista</span>
+                <span>{{ motorista_exibicao|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-section">
+        <h3>Roteiro</h3>
+        <div class="document-row">
+            <div>
+                <span class="document-label">Ida</span>
+                <p>{{ oficio.roteiro_ida|default:"-" }}</p>
+            </div>
+            <div>
+                <span class="document-label">Volta</span>
+                <p>{{ oficio.roteiro_volta|default:"-" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-section">
+        <h3>Motivo da Viagem</h3>
+        <p>{{ oficio.motivo }}</p>
+    </div>
+</div>
+{% endblock %}
